@@ -1,0 +1,43 @@
+import requests as r 
+from bs4 import BeautifulSoup 
+import pandas as pd 
+base_url="https://www.investing.com/equities/trending-stocks" 
+requiered= r.get(url=base_url)
+soup=BeautifulSoup(requiered.content,"lxml") 
+find_table=soup.find_all("table")[0]
+for i in find_table: 
+    world=[ i.text.strip() for i in find_table.find_all("td")]
+world2=[]
+for i in range(len(world)): 
+    if world[i] !='':
+        world2.append(world[i])
+df=pd.DataFrame(columns=["Name","last","high","low","Chg","Chg.%","Vol","Time"]) 
+Name=[] 
+last1=[] 
+high=[] 
+low=[] 
+chg=[] 
+chg_percent=[] 
+vol=[] 
+time=[]  
+for i in range(len(world2)): 
+    if i%8==0: 
+        Name.append(world2[i]) 
+        last1.append(world2[i+1]) 
+        high.append(world2[i+2]) 
+        low.append(world2[i+3]) 
+        chg.append(world2[i+4]) 
+        chg_percent.append(world2[i+5]) 
+        vol.append(world2[i+6])
+        time.append(world2[i+7]) 
+df["Name"]=Name
+df["last"]=last1
+df["high"]=high
+df["low"]=low
+df["Chg"]=chg
+df["Chg.%"]=chg_percent
+df["Vol"]=vol
+df["Time"]=time
+print(df)
+
+print(df)
